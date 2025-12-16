@@ -13,8 +13,21 @@ class WebSocketClient {
         if (this.initialized || !import.meta.client) return
         this.initialized = true
 
-        this.socket = io('/', {
-            transports: ['websocket'],
+        const config = useRuntimeConfig()
+        const wsUrl = (config.public.wsUrl as string) || '/'
+
+        this.socket = io(wsUrl, {
+            path: '/socket.io',
+            transports: ['polling', 'websocket'],
+            upgrade: true,
+        })
+
+        this.socket.on('connect_error', (err) => {
+            // Diagnóstico: si el upgrade a websocket falla, Socket.IO debería caer a polling.
+            // Este log nos permite ver la causa real (backend caído, 404, proxy, etc.).
+            // eslint-disable-next-line no-console
+            console.error('[socket.io] connect_error', err)
+            this.emit('error', err)
         })
 
         this.socket.on('connect', () => {

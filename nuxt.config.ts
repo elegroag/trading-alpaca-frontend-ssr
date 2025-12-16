@@ -15,7 +15,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: '/api',
-      wsUrl: '/',
+      wsUrl: process.env.NUXT_PUBLIC_WS_URL || '/',
     },
   },
 
@@ -23,13 +23,30 @@ export default defineNuxtConfig({
   nitro: {
     devProxy: {
       '/api': {
-        target: 'http://localhost:5080/api',
+        target: 'http://localhost:5080',
         changeOrigin: true,
       },
-      '/socket.io': {
-        target: 'http://localhost:5080/socket.io',
+      '/socket.io/': {
+        target: 'http://localhost:5080',
         ws: true,
         changeOrigin: true,
+      },
+    },
+  },
+
+  // Proxy adicional en Vite (dev) para evitar que /socket.io caiga en el router SSR
+  vite: {
+    server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:5080',
+          changeOrigin: true,
+        },
+        '/socket.io/': {
+          target: 'http://localhost:5080',
+          ws: true,
+          changeOrigin: true,
+        },
       },
     },
   },

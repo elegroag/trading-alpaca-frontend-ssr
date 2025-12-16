@@ -2,18 +2,61 @@
 @plugin "daisyui";
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   line-height: 1.5;
   font-weight: 400;
   color-scheme: dark;
+  color: #f5f5f5;
+  background-color: #000;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   min-width: 320px;
+  min-height: 100vh;
+  background-color: #000;
+  color: #f5f5f5;
+}
+
+a {
+  font-weight: 500;
+  color: #17a2b8;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #0d6efd;
+}
+
+button:not(.btn) {
+  border-radius: 6px;
+  border: 1px solid transparent;
+  padding: 0.4em 0.9em;
+  font-size: 0.95em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s, background-color 0.25s;
+}
+
+button:not(.btn):hover {
+  border-color: #17a2b8;
+}
+
+button:not(.btn):focus,
+button:not(.btn):focus-visible {
+  outline: 3px auto -webkit-focus-ring-color;
+}
+
+#__nuxt {
   min-height: 100vh;
 }
