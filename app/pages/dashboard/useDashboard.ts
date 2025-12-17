@@ -6,17 +6,10 @@ export function useDashboard() {
     const loading = ref(false)
     const error = ref<string | null>(null)
     const account = ref<Account | null>(null)
-    const ordersListRef = ref<{ loadOrders: () => void } | null>(null)
 
     const syncingSymbols = ref(false)
     const syncMessage = ref<string | null>(null)
     const syncError = ref<string | null>(null)
-
-    const handleOrderCreated = () => {
-        if (ordersListRef.value && typeof ordersListRef.value.loadOrders === 'function') {
-            ordersListRef.value.loadOrders()
-        }
-    }
 
     const syncMarketSymbols = async () => {
         syncingSymbols.value = true
@@ -67,11 +60,9 @@ export function useDashboard() {
         loading,
         error,
         account,
-        ordersListRef,
         syncingSymbols,
         syncMessage,
         syncError,
-        handleOrderCreated,
         syncMarketSymbols,
         loadAccount,
     }

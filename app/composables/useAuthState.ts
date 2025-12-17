@@ -2,6 +2,8 @@
 import type { UserProfile } from './useApi'
 
 const currentUser = ref<UserProfile | null>(null)
+const authReady = ref(false)
+let storageLoaded = false
 
 function loadFromStorage() {
     if (!import.meta.client) return
@@ -49,14 +51,20 @@ function clearAuth() {
 export function useAuthState() {
     const isAuthenticated = computed(() => !!currentUser.value)
 
-    // Cargar desde storage en cliente
-    if (import.meta.client && !currentUser.value) {
-        loadFromStorage()
+    if (import.meta.client) {
+        onMounted(() => {
+            if (!storageLoaded) {
+                storageLoaded = true
+                loadFromStorage()
+            }
+            authReady.value = true
+        })
     }
 
     return {
         user: currentUser,
         isAuthenticated,
+        authReady,
         getToken,
         setAuth,
         clearAuth,

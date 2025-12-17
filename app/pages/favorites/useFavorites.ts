@@ -61,6 +61,10 @@ export function useFavorites() {
         router.push({ path: '/compare', query: { symbol: symbol.toUpperCase() } })
     }
 
+    const goToNews = (symbol: string) => {
+        router.push({ path: '/news', query: { symbol: symbol.toUpperCase() } })
+    }
+
     const deriveTypeLabel = (doc: MarketSymbolDocument | null | undefined): string => {
         if (!doc) return 'N/D'
         const market = (doc.market || '').toLowerCase()
@@ -306,6 +310,7 @@ export function useFavorites() {
         selectedModel,
         goToChart,
         goToCompare,
+        goToNews,
         deriveTypeLabel,
         mapMarketSymbolToRow,
         loadFavoritesTable,

@@ -49,7 +49,7 @@ export function useRegister() {
             setAuth(token, user)
             wsClient.authenticate(token)
 
-            router.push('/')
+            router.push('/dashboard')
         } catch (e: unknown) {
             error.value = (e as Error)?.message ?? 'Error inesperado al registrar usuario'
         } finally {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Componente de lista de posiciones (migrado de components/PositionsList.vue)
-import { ChartBarSquareIcon } from '@heroicons/vue/24/outline'
+import { ChartBarSquareIcon, NewspaperIcon } from '@heroicons/vue/24/outline'
 import type { Position } from '~/composables/useApi'
 
 const router = useRouter()
@@ -9,6 +9,10 @@ const { TradingAPI } = useApi()
 const loading = ref(false)
 const error = ref<string | null>(null)
 const positions = ref<Position[]>([])
+
+const sortedPositions = computed(() => {
+  return [...positions.value].sort((a, b) => (b.unrealized_pl ?? 0) - (a.unrealized_pl ?? 0))
+})
 
 const loadPositions = async () => {
   loading.value = true
@@ -31,6 +35,12 @@ const goToChart = (sym: string) => {
   const s = sym?.trim()
   if (!s) return
   router.push({ path: '/chart', query: { symbol: s.toUpperCase() } })
+}
+
+const goToNews = (sym: string) => {
+  const s = sym?.trim()
+  if (!s) return
+  router.push({ path: '/news', query: { symbol: s.toUpperCase() } })
 }
 
 onMounted(() => {
@@ -59,9 +69,9 @@ defineExpose({ loadPositions })
         No hay posiciones abiertas.
       </div>
 
-      <div v-else class="mt-2 space-y-2">
+      <div v-else class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-3">
         <article
-          v-for="pos in positions"
+          v-for="pos in sortedPositions"
           :key="pos.symbol"
           class="card bg-base-200 border border-base-300 shadow-sm"
         >
@@ -88,6 +98,15 @@ defineExpose({ loadPositions })
                 >
                   <ChartBarSquareIcon class="w-4 h-4 mr-1" />
                   Ver gráfico
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-xs btn-outline"
+                  @click="goToNews(pos.symbol)"
+                >
+                  <NewspaperIcon class="w-4 h-4 mr-1" />
+                  Noticias
                 </button>
               </div>
             </header>

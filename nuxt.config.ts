@@ -15,7 +15,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: '/api',
-      wsUrl: process.env.NUXT_PUBLIC_WS_URL || '/',
+      wsUrl:
+        process.env.NUXT_PUBLIC_WS_URL ||
+        (process.env.NODE_ENV === 'development' ? 'http://localhost:5080' : '/'),
     },
   },
 
@@ -24,6 +26,11 @@ export default defineNuxtConfig({
     devProxy: {
       '/api': {
         target: 'http://localhost:5080',
+        changeOrigin: true,
+      },
+      '/socket.io': {
+        target: 'http://localhost:5080',
+        ws: true,
         changeOrigin: true,
       },
       '/socket.io/': {
@@ -40,6 +47,11 @@ export default defineNuxtConfig({
       proxy: {
         '/api': {
           target: 'http://localhost:5080',
+          changeOrigin: true,
+        },
+        '/socket.io': {
+          target: 'http://localhost:5080',
+          ws: true,
           changeOrigin: true,
         },
         '/socket.io/': {

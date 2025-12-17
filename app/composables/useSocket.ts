@@ -14,10 +14,10 @@ class WebSocketClient {
         this.initialized = true
 
         const config = useRuntimeConfig()
-        const wsUrl = (config.public.wsUrl as string) || '/'
+        const wsUrl = (config.public.wsUrl as string) || 'http://localhost:5080'
 
         this.socket = io(wsUrl, {
-            path: '/socket.io',
+            path: '/socket.io/',
             transports: ['polling', 'websocket'],
             upgrade: true,
         })

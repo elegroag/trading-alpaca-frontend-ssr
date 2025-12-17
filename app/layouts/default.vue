@@ -3,7 +3,10 @@
 import {
   ChartBarIcon,
   ChartPieIcon,
+  ClipboardDocumentListIcon,
+  NewspaperIcon,
   MagnifyingGlassIcon,
+  CircleStackIcon,
   StarIcon,
   Bars3BottomLeftIcon,
   ArrowRightStartOnRectangleIcon,
@@ -14,7 +17,7 @@ import {
 
 const route = useRoute()
 const router = useRouter()
-const { user, isAuthenticated, clearAuth } = useAuthState()
+const { user, isAuthenticated, authReady, clearAuth } = useAuthState()
 const wsClient = useSocket()
 
 const userEmail = computed(() => user.value?.email ?? '')
@@ -46,6 +49,9 @@ const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: ChartBarIcon },
   { to: '/chart', label: 'Gráfico', icon: ChartPieIcon },
   { to: '/screener', label: 'Screener', icon: MagnifyingGlassIcon },
+  { to: '/market-symbols', label: 'Símbolos', icon: CircleStackIcon },
+  { to: '/orders', label: 'Órdenes', icon: ClipboardDocumentListIcon },
+  { to: '/news', label: 'Noticias', icon: NewspaperIcon },
   { to: '/favorites', label: 'Favoritos', icon: StarIcon },
 ]
 
@@ -97,8 +103,8 @@ const isActiveRoute = (path: string) => {
       </div>
 
       <!-- Navegación -->
-      <nav class="flex-1 py-4 overflow-y-auto flex">
-        <ul class="menu px-2 gap-1 flex-1 flex flex-col justify-center">
+      <nav class="flex-1 py-4 overflow-y-auto">
+        <ul class="menu px-2 gap-1">
           <li v-for="item in navItems" :key="item.to">
             <NuxtLink
               :to="item.to"
@@ -120,7 +126,14 @@ const isActiveRoute = (path: string) => {
       </nav>
 
       <!-- Usuario (parte inferior) -->
-      <div class="border-t border-base-300 p-2" v-if="isAuthenticated">
+      <div class="border-t border-base-300 p-2" v-if="!authReady">
+        <div class="flex items-center justify-center gap-2 px-3 py-3">
+          <span class="loading loading-spinner loading-sm" />
+          <span v-if="!sidebarCollapsed" class="text-sm text-base-content/70">Cargando…</span>
+        </div>
+      </div>
+
+      <div class="border-t border-base-300 p-2" v-else-if="isAuthenticated">
         <NuxtLink
           to="/profile"
           class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-base-300 transition-colors"
@@ -141,17 +154,6 @@ const isActiveRoute = (path: string) => {
             <p class="text-xs text-base-content/60">Ver perfil</p>
           </div>
         </NuxtLink>
-
-        <button
-          type="button"
-          class="flex items-center gap-3 px-3 py-3 w-full rounded-lg hover:bg-error/10 hover:text-error transition-colors mt-1"
-          :class="sidebarCollapsed ? 'justify-center' : ''"
-          @click="handleLogout"
-          :title="sidebarCollapsed ? 'Cerrar sesión' : ''"
-        >
-          <ArrowRightStartOnRectangleIcon class="h-5 w-5 flex-shrink-0" />
-          <span v-if="!sidebarCollapsed" class="text-sm">Cerrar sesión</span>
-        </button>
       </div>
 
       <!-- Login/Register si no autenticado -->
@@ -204,10 +206,19 @@ const isActiveRoute = (path: string) => {
           </h1>
         </div>
 
-        <div class="hidden sm:flex items-center gap-2" v-if="isAuthenticated">
-          <span class="text-xs text-base-content/60 truncate max-w-[200px]">
+        <div class="flex items-center gap-2" v-if="authReady && isAuthenticated">
+          <span class="hidden sm:inline text-xs text-base-content/60 truncate max-w-[200px]">
             {{ userEmail }}
           </span>
+
+          <button
+            type="button"
+            class="btn btn-ghost btn-sm btn-square"
+            @click="handleLogout"
+            title="Cerrar sesión"
+          >
+            <ArrowRightStartOnRectangleIcon class="h-5 w-5" />
+          </button>
         </div>
       </header>
 

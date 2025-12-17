@@ -22,6 +22,8 @@ const {
   limit,
   minPrice,
   maxPrice,
+  sortBy,
+  sortDir,
   favorites,
   loadingFavorites,
   updatingFavorites,
@@ -88,6 +90,16 @@ const {
           <option :value="20">Top 20</option>
           <option :value="50">Top 50</option>
           <option :value="100">Top 100</option>
+        </select>
+
+        <select v-model="sortBy" class="select select-sm select-bordered">
+          <option value="price">Ordenar por precio</option>
+          <option v-if="mode === 'most-actives'" value="volume">Ordenar por volumen</option>
+        </select>
+
+        <select v-model="sortDir" class="select select-sm select-bordered">
+          <option value="desc">Desc</option>
+          <option value="asc">Asc</option>
         </select>
 
         <div class="flex items-center gap-1 text-xs">

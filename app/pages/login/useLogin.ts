@@ -28,7 +28,8 @@ export function useLogin() {
             setAuth(token, user)
             wsClient.authenticate(token)
 
-            const redirect = (route.query.redirect as string) || '/'
+            const redirectQuery = route.query.redirect as string | undefined
+            const redirect = redirectQuery && redirectQuery !== '/' ? redirectQuery : '/dashboard'
             router.push(redirect)
         } catch (e: unknown) {
             error.value = (e as Error)?.message ?? 'Error inesperado al iniciar sesión'

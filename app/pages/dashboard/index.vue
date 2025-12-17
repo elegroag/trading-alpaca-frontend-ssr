@@ -12,11 +12,9 @@ const {
   loading,
   error,
   account,
-  ordersListRef,
   syncingSymbols,
   syncMessage,
   syncError,
-  handleOrderCreated,
   syncMarketSymbols,
 } = useDashboard()
 </script>
@@ -39,7 +37,7 @@ const {
           <ArrowPathIcon v-else class="w-4 h-4 mr-1" />
           Sincronizar símbolos
         </button>
-        <OrderForm @order-created="handleOrderCreated" />
+        <OrderForm />
       </div>
     </header>
 
@@ -112,9 +110,8 @@ const {
       </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 gap-4">
       <PositionsList />
-      <OrdersList ref="ordersListRef" />
     </div>
   </section>
 </template>

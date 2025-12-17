@@ -14,6 +14,9 @@ export function useScreener() {
     const minPrice = ref<number | null>(null)
     const maxPrice = ref<number | null>(null)
 
+    const sortBy = ref<'price' | 'volume'>('volume')
+    const sortDir = ref<'desc' | 'asc'>('desc')
+
     const mostActives = ref<MostActiveItem[]>([])
     const movers = ref<MarketMoversData | null>(null)
 
@@ -32,12 +35,31 @@ export function useScreener() {
         return favoriteSet.value.has(symbol.toUpperCase())
     }
 
+    const compareNullableNumbers = (
+        a: number | null | undefined,
+        b: number | null | undefined,
+        dir: 'desc' | 'asc',
+    ) => {
+        const aNull = a == null
+        const bNull = b == null
+        if (aNull && bNull) return 0
+        if (aNull) return 1
+        if (bNull) return -1
+        return dir === 'asc' ? a - b : b - a
+    }
+
     const filteredMostActives = computed(() => {
         let list = mostActives.value
         if (showOnlyFavorites.value && favorites.value.length) {
             list = list.filter((item) => isFavorite(item.symbol))
         }
-        return list
+        const dir = sortDir.value
+        const key = sortBy.value
+        return [...list].sort((a, b) => {
+            const av = key === 'price' ? a.price : a.volume
+            const bv = key === 'price' ? b.price : b.volume
+            return compareNullableNumbers(av, bv, dir)
+        })
     })
 
     const filteredGainers = computed(() => {
@@ -45,7 +67,9 @@ export function useScreener() {
         if (showOnlyFavorites.value && favorites.value.length) {
             list = list.filter((item) => isFavorite(item.symbol))
         }
-        return list
+        const dir = sortDir.value
+        if (sortBy.value !== 'price') return list
+        return [...list].sort((a, b) => compareNullableNumbers(a.price, b.price, dir))
     })
 
     const filteredLosers = computed(() => {
@@ -53,8 +77,19 @@ export function useScreener() {
         if (showOnlyFavorites.value && favorites.value.length) {
             list = list.filter((item) => isFavorite(item.symbol))
         }
-        return list
+        const dir = sortDir.value
+        if (sortBy.value !== 'price') return list
+        return [...list].sort((a, b) => compareNullableNumbers(a.price, b.price, dir))
     })
+
+    watch(
+        () => mode.value,
+        (m) => {
+            if (m === 'movers' && sortBy.value === 'volume') {
+                sortBy.value = 'price'
+            }
+        },
+    )
 
     const goToChart = (symbol: string | null | undefined) => {
         if (!symbol) return
@@ -173,6 +208,8 @@ export function useScreener() {
         limit,
         minPrice,
         maxPrice,
+        sortBy,
+        sortDir,
         mostActives,
         movers,
         favorites,

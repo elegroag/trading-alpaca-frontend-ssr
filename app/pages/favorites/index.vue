@@ -6,6 +6,7 @@ import {
   ChartBarSquareIcon,
   ArrowsRightLeftIcon,
   ArrowTrendingUpIcon,
+  NewspaperIcon,
   TrashIcon,
   XMarkIcon,
 } from '@heroicons/vue/24/outline'
@@ -34,6 +35,7 @@ const {
   selectedModel,
   goToChart,
   goToCompare,
+  goToNews,
   addFavoriteFromInput,
   removeFavorite,
   refreshFavoritesFromAlpaca,
@@ -197,6 +199,9 @@ const hasData = computed(() => rows.value.length > 0)
                   </button>
                   <button type="button" class="btn btn-ghost btn-xs" @click="goToCompare(row.symbol)" title="Comparar">
                     <ArrowsRightLeftIcon class="w-4 h-4" />
+                  </button>
+                  <button type="button" class="btn btn-ghost btn-xs" @click="goToNews(row.symbol)" title="Noticias">
+                    <NewspaperIcon class="w-4 h-4" />
                   </button>
                   <button
                     type="button"

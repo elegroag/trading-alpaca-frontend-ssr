@@ -187,6 +187,15 @@ export interface MarketSymbolDocument {
     last_screener_timestamp: string | null
 }
 
+export interface NewsItem {
+    symbol: string
+    title: string
+    publisher?: string | null
+    date?: string | null
+    url?: string | null
+    source?: string | null
+}
+
 export interface FairValueMethod {
     buy: number
     sell: number
@@ -375,6 +384,14 @@ export const ScreenerAPI = {
     },
 }
 
+export const NewsAPI = {
+    async getNews(symbol: string, params?: { limit?: number }): Promise<ApiResponse<NewsItem[]>> {
+        const sym = (symbol || '').trim().toUpperCase()
+        const { data } = await api.get<ApiResponse<NewsItem[]>>(`/news/${sym}`, { params })
+        return data
+    },
+}
+
 export const SymbolPreferencesAPI = {
     async getSymbols(): Promise<ApiResponse<string[]>> {
         const { data } = await api.get<ApiResponse<string[]>>('/user/preferences/symbols')
@@ -429,6 +446,7 @@ export function useApi() {
         AuthAPI,
         TradingAPI,
         ScreenerAPI,
+        NewsAPI,
         SymbolPreferencesAPI,
     }
 }
