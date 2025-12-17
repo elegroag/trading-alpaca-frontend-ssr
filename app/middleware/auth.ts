@@ -9,7 +9,7 @@ export default defineNuxtRouteMiddleware((to) => {
     // Si está en ruta pública y tiene token, redirigir al dashboard
     if (publicRoutes.includes(to.path)) {
         if (token) {
-            return navigateTo('/')
+            return navigateTo('/dashboard')
         }
         return
     }

@@ -43,7 +43,7 @@ const handleLogout = () => {
 }
 
 const navItems = [
-  { to: '/', label: 'Dashboard', icon: ChartBarIcon },
+  { to: '/dashboard', label: 'Dashboard', icon: ChartBarIcon },
   { to: '/chart', label: 'Gráfico', icon: ChartPieIcon },
   { to: '/screener', label: 'Screener', icon: MagnifyingGlassIcon },
   { to: '/favorites', label: 'Favoritos', icon: StarIcon },
