@@ -397,29 +397,29 @@ export const NewsAPI = {
 
 export const SymbolPreferencesAPI = {
     async getSymbols(): Promise<ApiResponse<string[]>> {
-        const { data } = await api.get<ApiResponse<string[]>>('/user/preferences/symbols')
+        const { data } = await api.get<ApiResponse<string[]>>('/preferences/symbols')
         return data
     },
 
     async setSymbols(symbols: string[]): Promise<ApiResponse<string[]>> {
-        const { data } = await api.put<ApiResponse<string[]>>('/user/preferences/symbols', { symbols })
+        const { data } = await api.put<ApiResponse<string[]>>('/preferences/symbols', { symbols })
         return data
     },
 
     async addSymbols(payload: { symbol?: string; symbols?: string[] }): Promise<ApiResponse<string[]>> {
-        const { data } = await api.post<ApiResponse<string[]>>('/user/preferences/symbols', payload)
+        const { data } = await api.post<ApiResponse<string[]>>('/preferences/symbols', payload)
         return data
     },
 
     async removeSymbols(payload?: { symbol?: string; symbols?: string[] }): Promise<ApiResponse<string[]>> {
-        const { data } = await api.delete<ApiResponse<string[]>>('/user/preferences/symbols', {
+        const { data } = await api.delete<ApiResponse<string[]>>('/preferences/symbols', {
             data: payload ?? {},
         })
         return data
     },
 
     async getFavoriteDetails(): Promise<ApiResponse<MarketSymbolDocument[]>> {
-        const { data } = await api.get<ApiResponse<MarketSymbolDocument[]>>('/user/favorites/details')
+        const { data } = await api.get<ApiResponse<MarketSymbolDocument[]>>('/favorites/details')
         return data
     },
 
@@ -433,12 +433,12 @@ export const SymbolPreferencesAPI = {
         profile?: 'intradia' | 'corto' | 'largo'
         model_type?: 'xgboost' | 'random_forest'
     }): Promise<ApiResponse<TrendAnalysisResult>> {
-        const { data } = await api.post<ApiResponse<TrendAnalysisResult>>('/user/favorites/trend', payload)
+        const { data } = await api.post<ApiResponse<TrendAnalysisResult>>('/favorites/trend', payload)
         return data
     },
 
     async refreshFavorites(): Promise<ApiResponse<MarketSymbolDocument[]>> {
-        const { data } = await api.post<ApiResponse<MarketSymbolDocument[]>>('/user/favorites/refresh')
+        const { data } = await api.post<ApiResponse<MarketSymbolDocument[]>>('/favorites/refresh')
         return data
     },
 }
