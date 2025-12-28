@@ -1,8 +1,7 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-
+  ssr: false,
   css: ['~/assets/css/main.css'],
 
   postcss: {
@@ -16,8 +15,7 @@ export default defineNuxtConfig({
     public: {
       apiBase: '/api',
       wsUrl:
-        process.env.NUXT_PUBLIC_WS_URL ||
-        (process.env.NODE_ENV === 'development' ? 'http://localhost:5080' : '/'),
+        process.env.API_WS_URL || 'http://localhost:5080',
     },
   },
 
@@ -25,16 +23,16 @@ export default defineNuxtConfig({
   nitro: {
     devProxy: {
       '/api': {
-        target: 'http://localhost:5080',
+        target: process.env.API_WS_URL || 'http://localhost:5080',
         changeOrigin: true,
       },
       '/socket.io': {
-        target: 'http://localhost:5080',
+        target: process.env.API_WS_URL || 'http://localhost:5080',
         ws: true,
         changeOrigin: true,
       },
       '/socket.io/': {
-        target: 'http://localhost:5080',
+        target: process.env.API_WS_URL || 'http://localhost:5080',
         ws: true,
         changeOrigin: true,
       },
@@ -46,23 +44,20 @@ export default defineNuxtConfig({
     server: {
       proxy: {
         '/api': {
-          target: 'http://localhost:5080',
+          target: process.env.API_WS_URL || 'http://localhost:5080',
           changeOrigin: true,
         },
         '/socket.io': {
-          target: 'http://localhost:5080',
+          target: process.env.API_WS_URL || 'http://localhost:5080',
           ws: true,
           changeOrigin: true,
         },
         '/socket.io/': {
-          target: 'http://localhost:5080',
+          target: process.env.API_WS_URL || 'http://localhost:5080',
           ws: true,
           changeOrigin: true,
         },
       },
     },
-  },
-
-  // SSR habilitado por defecto en Nuxt 4
-  ssr: true,
+  }
 })

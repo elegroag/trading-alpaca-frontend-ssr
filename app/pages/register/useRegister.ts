@@ -2,7 +2,6 @@ export function useRegister() {
     const router = useRouter()
     const { AuthAPI } = useApi()
     const { setAuth } = useAuthState()
-    const wsClient = useSocket()
 
     const email = ref('')
     const password = ref('')
@@ -47,7 +46,6 @@ export function useRegister() {
 
             const { token, user } = loginResponse.data
             setAuth(token, user)
-            wsClient.authenticate(token)
 
             router.push('/dashboard')
         } catch (e: unknown) {

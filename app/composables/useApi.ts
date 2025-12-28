@@ -1,8 +1,11 @@
 // Composable para acceso a la API REST (migrado de services/api.ts)
 import axios from 'axios'
 
+const config = useRuntimeConfig()
+const apiBaseUrl = config.public.wsUrl as string || 'http://localhost:5080'
+
 const api = axios.create({
-    baseURL: '/api',
+    baseURL: `${apiBaseUrl}/api`,
 })
 
 // Interceptor para añadir token JWT

@@ -3,7 +3,6 @@ export function useLogin() {
     const router = useRouter()
     const { AuthAPI } = useApi()
     const { setAuth } = useAuthState()
-    const wsClient = useSocket()
 
     const email = ref('')
     const password = ref('')
@@ -26,7 +25,6 @@ export function useLogin() {
 
             const { token, user } = response.data
             setAuth(token, user)
-            wsClient.authenticate(token)
 
             const redirectQuery = route.query.redirect as string | undefined
             const redirect = redirectQuery && redirectQuery !== '/' ? redirectQuery : '/dashboard'
