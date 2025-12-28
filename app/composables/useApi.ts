@@ -123,14 +123,25 @@ export interface CreateOrderPayload {
     symbol: string
     qty: number
     side: 'buy' | 'sell'
-    order_type: 'market' | 'limit'
+    order_type: 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop' | 'bracket'
     limit_price?: number
+    stop_price?: number
+    trail_price?: number
+    trail_percent?: number
+    take_profit?: {
+        limit_price: number
+    }
+    stop_loss?: {
+        stop_price: number
+        limit_price?: number
+    }
 }
 
 export interface ApiResponse<T> {
     success: boolean
     data: T
     error?: string
+    message?: string
 }
 
 export interface ChartData {
