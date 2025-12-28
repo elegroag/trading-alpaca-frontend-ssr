@@ -46,7 +46,8 @@ export interface Position {
 export interface Order {
     order_id: string
     symbol: string
-    qty: number
+    qty: number | null
+    notional: number | null
     side: string
     order_type: string
     time_in_force: string
@@ -121,7 +122,8 @@ export interface UpdateKeysPayload {
 
 export interface CreateOrderPayload {
     symbol: string
-    qty: number
+    qty?: number
+    notional?: number
     side: 'buy' | 'sell'
     order_type: 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop' | 'bracket'
     limit_price?: number

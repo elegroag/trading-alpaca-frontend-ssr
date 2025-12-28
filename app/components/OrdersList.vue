@@ -110,25 +110,50 @@ defineExpose({ loadOrders })
               </button>
             </header>
 
-            <div class="grid grid-cols-2 gap-2 text-xs sm:text-sm">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs sm:text-sm">
               <div>
-                <div class="label-text-alt">Cantidad</div>
-                <div class="font-semibold">{{ order.qty }}</div>
+                <div class="label-text-alt text-base-content/60">Cantidad / Monto</div>
+                <div class="font-semibold">
+                  <span v-if="order.qty">{{ order.qty }} acc.</span>
+                  <span v-if="order.qty && order.notional"> / </span>
+                  <span v-if="order.notional">${{ order.notional.toFixed(2) }}</span>
+                </div>
               </div>
               <div>
-                <div class="label-text-alt">Tipo</div>
-                <div class="font-semibold">{{ order.order_type }}</div>
+                <div class="label-text-alt text-base-content/60">Tipo</div>
+                <div class="font-semibold capitalize">{{ order.order_type }}</div>
               </div>
               <div v-if="order.limit_price !== null">
-                <div class="label-text-alt">Precio límite</div>
+                <div class="label-text-alt text-base-content/60">Precio límite</div>
                 <div class="font-semibold">
                   ${{ order.limit_price.toFixed(2) }}
                 </div>
               </div>
+              <div v-if="order.stop_price !== null">
+                <div class="label-text-alt text-base-content/60">Precio stop</div>
+                <div class="font-semibold">
+                  ${{ order.stop_price.toFixed(2) }}
+                </div>
+              </div>
+              <div>
+                <div class="label-text-alt text-base-content/60">Ejecutado</div>
+                <div class="font-semibold">
+                  {{ order.filled_qty }} acc.
+                  <span v-if="order.filled_avg_price" class="text-xs text-base-content/60">
+                    @ ${{ order.filled_avg_price.toFixed(2) }}
+                  </span>
+                </div>
+              </div>
               <div v-if="order.time_in_force">
-                <div class="label-text-alt">Time in force</div>
+                <div class="label-text-alt text-base-content/60">TIF</div>
                 <div class="font-semibold uppercase">
                   {{ order.time_in_force }}
+                </div>
+              </div>
+              <div class="col-span-2 sm:col-span-4">
+                <div class="label-text-alt text-base-content/60">Creada</div>
+                <div class="text-[10px] sm:text-xs opacity-70">
+                  {{ order.created_at ? new Date(order.created_at).toLocaleString() : 'N/A' }}
                 </div>
               </div>
             </div>

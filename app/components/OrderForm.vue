@@ -13,6 +13,8 @@ const successMessage = ref<string | null>(null)
 const form = reactive({
   symbol: '',
   qty: 1,
+  notional: null as number | null,
+  amount_type: 'qty' as 'qty' | 'notional',
   side: 'buy' as 'buy' | 'sell',
   order_type: 'market' as 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop' | 'bracket',
   limit_price: null as number | null,
@@ -22,6 +24,10 @@ const form = reactive({
   take_profit: { limit_price: 0 } as { limit_price: number },
   stop_loss: { stop_price: 0 } as { stop_price: number; limit_price?: number },
 })
+
+const showQty = computed(() => form.amount_type === 'qty')
+const showNotional = computed(() => form.amount_type === 'notional')
+const canUseNotional = computed(() => ['market', 'limit'].includes(form.order_type))
 
 const showLimitPrice = computed(() => ['limit', 'stop_limit', 'bracket'].includes(form.order_type))
 const showStopPrice = computed(() => ['stop', 'stop_limit', 'bracket'].includes(form.order_type))
@@ -47,6 +53,8 @@ const emit = defineEmits<{
 const resetForm = () => {
   form.symbol = ''
   form.qty = 1
+  form.notional = null
+  form.amount_type = 'qty'
   form.side = 'buy'
   form.order_type = 'market'
   form.limit_price = null
@@ -81,9 +89,16 @@ const submitOrder = async () => {
     return
   }
 
-  if (!form.qty || form.qty <= 0) {
-    error.value = 'La cantidad debe ser mayor a 0.'
-    return
+  if (form.amount_type === 'qty') {
+    if (!form.qty || form.qty <= 0) {
+      error.value = 'La cantidad debe ser mayor a 0.'
+      return
+    }
+  } else {
+    if (!form.notional || form.notional <= 0) {
+      error.value = 'El monto en dólares debe ser mayor a 0.'
+      return
+    }
   }
 
   // Validaciones adicionales según tipo de orden
@@ -159,9 +174,14 @@ const submitOrder = async () => {
 
   const payload: CreateOrderPayload = {
     symbol,
-    qty: form.qty,
     side: form.side,
     order_type: form.order_type,
+  }
+
+  if (form.amount_type === 'qty') {
+    payload.qty = form.qty
+  } else {
+    payload.notional = form.notional ?? undefined
   }
 
   // Agregar parámetros según tipo de orden
@@ -249,17 +269,59 @@ const submitOrder = async () => {
             />
           </div>
 
-          <div class="form-control">
+          <div class="form-control" v-if="canUseNotional">
             <label class="label">
-              <span class="label-text">Cantidad</span>
+              <span class="label-text">Tipo de Cantidad</span>
+            </label>
+            <div class="flex gap-4 px-1">
+              <label class="flex items-center space-x-2 cursor-pointer">
+                <input
+                  v-model="form.amount_type"
+                  type="radio"
+                  value="qty"
+                  class="radio radio-sm radio-primary"
+                />
+                <span class="text-sm">Cantidad (qty)</span>
+              </label>
+              <label class="flex items-center space-x-2 cursor-pointer">
+                <input
+                  v-model="form.amount_type"
+                  type="radio"
+                  value="notional"
+                  class="radio radio-sm radio-primary"
+                />
+                <span class="text-sm">Fraccional (notional)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-control" v-if="showQty">
+            <label class="label">
+              <span class="label-text">Cantidad (Acciones)</span>
             </label>
             <input
               v-model.number="form.qty"
               type="number"
-              min="1"
+              min="0.000000001"
+              step="any"
               class="input input-bordered input-sm"
               placeholder="10"
-              required
+              :required="showQty"
+            />
+          </div>
+
+          <div class="form-control" v-if="showNotional">
+            <label class="label">
+              <span class="label-text">Monto ($ USD)</span>
+            </label>
+            <input
+              v-model.number="form.notional"
+              type="number"
+              min="1"
+              step="0.01"
+              class="input input-bordered input-sm"
+              placeholder="100.00"
+              :required="showNotional"
             />
           </div>
 
