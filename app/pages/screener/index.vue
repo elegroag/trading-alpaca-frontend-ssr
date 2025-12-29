@@ -18,6 +18,7 @@ const {
   error,
   mode,
   market,
+  exchange,
   by,
   limit,
   minPrice,
@@ -73,6 +74,14 @@ const {
         <select v-model="market" class="select select-sm select-bordered" @change="loadData">
           <option value="stocks">Acciones</option>
           <option value="crypto">Crypto</option>
+        </select>
+
+        <select v-if="isStocks" v-model="exchange" class="select select-sm select-bordered" @change="loadData">
+          <option :value="null">Todos los Exchange</option>
+          <option value="NASDAQ">NASDAQ</option>
+          <option value="NYSE">NYSE</option>
+          <option value="AMEX">AMEX</option>
+          <option value="ARCA">ARCA</option>
         </select>
 
         <select
@@ -207,6 +216,7 @@ const {
               <tr>
                 <th>#</th>
                 <th>Símbolo</th>
+                <th>Exchange</th>
                 <th>Nombre</th>
                 <th class="text-right">Precio</th>
                 <th class="text-right">Cierre</th>
@@ -235,6 +245,7 @@ const {
                   </button>
                   <span class="ml-1">{{ item.symbol }}</span>
                 </td>
+                <td class="text-xs opacity-70">{{ item.exchange }}</td>
                 <td>{{ item.name }}</td>
                 <td class="text-right">
                   {{ item.price != null ? `$${item.price.toFixed(2)}` : '-' }}
@@ -283,11 +294,12 @@ const {
                 <tr>
                   <th>#</th>
                   <th>Símbolo</th>
+                  <th>Exchange</th>
                   <th class="text-right">Precio</th>
                   <th class="text-right">Cierre</th>
                   <th class="text-right">Cambio</th>
                   <th class="text-right">Cambio %</th>
-                  <th class="text-right">Acciones</th>
+                  <th class="text-center">Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -310,6 +322,7 @@ const {
                     </button>
                     <span class="ml-1">{{ item.symbol }}</span>
                   </td>
+                  <td class="text-[10px] opacity-60">{{ item.exchange || '-' }}</td>
                   <td class="text-right">{{ item.price != null ? `$${item.price.toFixed(2)}` : '-' }}</td>
                   <td class="text-right">{{ item.close != null ? `$${item.close.toFixed(2)}` : '-' }}</td>
                   <td class="text-right">{{ item.change != null ? `$${item.change.toFixed(2)}` : '-' }}</td>
@@ -338,6 +351,7 @@ const {
                 <tr>
                   <th>#</th>
                   <th>Símbolo</th>
+                  <th>Exchange</th>
                   <th class="text-right">Precio</th>
                   <th class="text-right">Cierre</th>
                   <th class="text-right">Cambio</th>
@@ -365,6 +379,7 @@ const {
                     </button>
                     <span class="ml-1">{{ item.symbol }}</span>
                   </td>
+                  <td class="text-[10px] opacity-60">{{ item.exchange || '-' }}</td>
                   <td class="text-right">{{ item.price != null ? `$${item.price.toFixed(2)}` : '-' }}</td>
                   <td class="text-right">{{ item.close != null ? `$${item.close.toFixed(2)}` : '-' }}</td>
                   <td class="text-right">{{ item.change != null ? `$${item.change.toFixed(2)}` : '-' }}</td>

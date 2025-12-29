@@ -160,6 +160,7 @@ export interface MostActiveItem {
     close: number | null
     market: string | null
     by: string | null
+    exchange: string | null
     last_updated: string | null
 }
 
@@ -172,6 +173,7 @@ export interface MarketMoversData {
         close: number | null
         direction: 'gainer'
         market: string | null
+        exchange: string | null
         last_updated: string | null
     }>
     losers: Array<{
@@ -182,6 +184,7 @@ export interface MarketMoversData {
         close: number | null
         direction: 'loser'
         market: string | null
+        exchange: string | null
         last_updated: string | null
     }>
     market: string | null
@@ -346,6 +349,7 @@ export const TradingAPI = {
         market?: 'stocks' | 'crypto'
         minPrice?: number | null
         maxPrice?: number | null
+        exchange?: string | null
     }): Promise<ApiResponse<MostActiveItem[]>> {
         const queryParams: Record<string, unknown> = {}
         if (params?.by) queryParams.by = params.by
@@ -353,6 +357,7 @@ export const TradingAPI = {
         if (params?.market) queryParams.market = params.market
         if (params?.minPrice != null) queryParams.min_price = params.minPrice
         if (params?.maxPrice != null) queryParams.max_price = params.maxPrice
+        if (params?.exchange) queryParams.exchange = params.exchange
 
         const { data } = await api.get<ApiResponse<MostActiveItem[]>>('/screener/most-actives', {
             params: queryParams,
@@ -365,12 +370,14 @@ export const TradingAPI = {
         market?: 'stocks' | 'crypto'
         minPrice?: number | null
         maxPrice?: number | null
+        exchange?: string | null
     }): Promise<ApiResponse<MarketMoversData>> {
         const queryParams: Record<string, unknown> = {}
         if (params?.limit != null) queryParams.limit = params.limit
         if (params?.market) queryParams.market = params.market
         if (params?.minPrice != null) queryParams.min_price = params.minPrice
         if (params?.maxPrice != null) queryParams.max_price = params.maxPrice
+        if (params?.exchange) queryParams.exchange = params.exchange
 
         const { data } = await api.get<ApiResponse<MarketMoversData>>('/screener/market-movers', {
             params: queryParams,

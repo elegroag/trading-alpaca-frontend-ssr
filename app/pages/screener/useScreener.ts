@@ -11,6 +11,7 @@ export function useScreener() {
     const market = ref<'stocks' | 'crypto'>('stocks')
     const by = ref<'volume' | 'trades'>('volume')
     const limit = ref(10)
+    const exchange = ref<string | null>(null)
     const minPrice = ref<number | null>(null)
     const maxPrice = ref<number | null>(null)
 
@@ -148,6 +149,7 @@ export function useScreener() {
                     market: market.value,
                     minPrice: minPrice.value,
                     maxPrice: maxPrice.value,
+                    exchange: exchange.value,
                 })
                 if (!resp.success) {
                     error.value = resp.error ?? 'Error al obtener most actives'
@@ -162,6 +164,7 @@ export function useScreener() {
                     market: market.value,
                     minPrice: minPrice.value,
                     maxPrice: maxPrice.value,
+                    exchange: exchange.value,
                 })
                 if (!resp.success) {
                     error.value = resp.error ?? 'Error al obtener market movers'
@@ -206,6 +209,7 @@ export function useScreener() {
         market,
         by,
         limit,
+        exchange,
         minPrice,
         maxPrice,
         sortBy,
